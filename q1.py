@@ -6,15 +6,11 @@ def findReachable(array, node, startingNode):
 	for x in range(array.shape[1]):
 		#if node is reachable
 		if array[node][x] == 1:
-			#if we have not already added this node(cycle avoidance)
-			if(x != startingNode):
-				print "Adding {}".format(x)
-				#add that node to the reachable list
-				reachable.append(x)
-				#add all nodes that that node can reach
-				reachable += findReachable(array, x, startingNode)
-			else:
-				return reachable
+			#TODO: if we have not already added this node(cycle avoidance)
+			#add that node to the reachable list
+			reachable.append(x)
+			#add all nodes that that node can reach
+			reachable += findReachable(array, x, startingNode)
 	return reachable
 
 def closure(array):
