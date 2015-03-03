@@ -1,47 +1,8 @@
 import numpy
-
-def transitiveClosure(array):
-	#Initialize returned array
-	closure = array
-	#iterate through each node n
-	for n in range(array.shape[1]):
-		#dfs from n to find all reachable nodes from n
-		reachable = DFS(n, array)
-		#add all reachable nodes to n's edges
-		for i in reachable:
-			closure[n][i] = 1
-	return closure
-
-def DFS(node, array):
-	#Initialize return list
-	final = []
-	#Remeber initial node
-	S = [node]
-	#Initialize E to be a list representing the explored state of each node
-	E = [0] * array.shape[1]
-	#While S not empty
-	while len(S) != 0:
-		#Take a node u from S
-		u = S.pop()
-		#If explored[u] = false then
-		if E[u] == 0:
-			#Set explored[u] true
-			E[u] = 1
-			#For each edge (u,v) incitent to u
-			for v in range(array.shape[1]):
-				if array[u][v] == 1:
-					#Add v to the stack S
-					final.append(v)
-					S.append(v)
-	#remove duplicates:
-	final = list(set(final))
-	#remove reference to self:
-	if node in final: final.remove(node)
-	return final
-
+# Graphs represented by numpy multidimensional arrays, ie:
 a = numpy.zeros([6,6])
-#[from][to]
-#[y][x]
+# Set the edges
+# [from][to]
 a[0][1] = 1
 a[0][3] = 1
 a[0][4] = 1
@@ -50,7 +11,38 @@ a[3][5] = 1
 a[4][0] = 1
 a[5][4] = 1
 
-print a
-tc = transitiveClosure(a)
-print "\n"
-print tc
+def transitiveClosure(array):
+	finalClosureArray = array
+	# Iterate through each node in the graph
+	for node in range(array.shape[1]):
+		reachable = DFS(node, array)
+		# Add all reachable nodes to n's edges
+		for reachedNode in reachable:
+			finalClosureArray[node][reachedNode] = 1
+	return finalClosureArray
+
+def DFS(node, array):
+	final = []
+	# Stack of nodes to visit
+	visitStack = [node]
+	# List representing explored state of each node
+	explored = [0] * array.shape[1]
+	while len(visitStack) != 0:
+		boundaryNode = visitStack.pop()
+		# If boundaryNode hasnt been explored
+		if explored[boundaryNode] == 0:
+			explored[boundaryNode] = 1
+			# For each neighbor of boundaryNode 
+			for possibleNeighbor in range(array.shape[1]):
+				if array[boundaryNode][possibleNeighbor] == 1:
+					#Add neighbor to the visitStack
+					final.append(possibleNeighbor)
+					visitStack.append(possibleNeighbor)
+	# Remove duplicates
+	final = list(set(final))
+	# Remove reference to self
+	if node in final: final.remove(node)
+	return final
+
+# Example
+print transitiveClosure(a)

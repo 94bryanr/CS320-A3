@@ -11,12 +11,6 @@
 % For source code
 \usepackage{minted}
 
-% Custom colors
-\usepackage{color}
-\definecolor{deepblue}{rgb}{0,0,0.5}
-\definecolor{deepred}{rgb}{0.6,0,0}
-\definecolor{deepgreen}{rgb}{0,0.5,0}
-
 \begin{document}
 \maketitle{}
 
@@ -30,25 +24,27 @@ This is the Python code:
 
 \inputminted{python}{q1.py}
 
-The running time of this code is $O( |N| * (|E|+|N|) )$. We come to this via the following argument.
+The running time of this code is $O( |N| * (|E|+|N|) )$.
+I've come to this via the following argument.
 
 The outer loop of the $transitiveClosure$ function will run $|N|$ times.
-Within that loop we call $DFS$, which is $O(|E|)$, on the current node.
-In the same loop we then update the adjacency graph, which happens in $O(|N|)$ time.
+Within that loop we call $DFS$, which is $O(|E|)$ since at worst it will run through each edge in the graph.
+In the same loop we then update the adjacency graph, which happens in $O(|N|)$ time because at worst it must update $|N|-1$ entries in the matrix.
 Thus the inside of our loop runs in $O(|E| + |N|)$ time, and the outer loop runs $O(|N|)$ times.
 This gives us a final bound of $O( |N| * (|E|+|N|) )$.
 
 
 \subsection*{Problem 2}
-Since each node has a degree of at least 2, there are no leaf nodes.
-This means that it will be possible to find a cycle without the need to backtrack.
-By simply using a depth-first search and checking for run-overs we can find a cycle in $O(|V|)$ time.
+Since each node has a degree of at least 2, there are no leaf nodes
+(a leaf node is by definition a node of degree 1).
+This means that it will be possible to find a cycle without the need to backtrack
+(we can not hit a dead end).
+By using a depth-first search and checking for twice explored nodes, we can find a cycle in $O(|V|)$ time.
+The running time is $O(|V|)$ because every time we travel down an edge we ``remove'' a node from our remaining search pool of nodes.
 
 Here is the algorithm:
 
 \inputminted{python}{q2.py}
-
-EXPLAIN WHY NOT O|N| time!!!!! Each edge ``removes'' a node
 
 \subsection*{Problem 3}
 We may show a strongly connected graph also contains any two nodes $(u,v)$ in a cycle
@@ -62,6 +58,25 @@ Since we start at $u$ and go through $v$, then come back to $u$, we have a cycle
 Thus, if a graph is strongly connected, any two nodes are contained in a cycle.
 
 \subsection*{Problem 4}
+\subsubsection*{Adjacency Matrix}
+An adjacency matrix implementation allows us to check in $O(1)$ time whether or not a given edge exists in a graph.
+The graph must take $|V|^2$ space since we have $\Omega (|V|^2)$ edges.
+It takes $\Omega (|V|)$ time to check all incident edges of a node, even if there are less than $|V|$ incident edges.
+\subsubsection*{Adjacency List}
+An adjacency list requires only $O(|E| + |V|)$ space since we need $|V|$ arrays,
+where the length of all the arrays is at most $O(|E|)$.
+Since we have $\Omega (|V|^2)$ edges, we will still require $O(|V|^2)$ space,
+and thus we save no space over an adjacency matrix representation.
+The time it takes to find edge $e$ is proportional to the lowest degree'd node that $e$ is attatched to.
+Once a node is found, its neighbors can be found in constant time per neighbor.
+\subsubsection*{Preference}
+Since the graph has $\Omega (|V|^2)$ edges,
+both implementations will take the same amount of space.
+It will take $O(|V|)$ time to find all the neighbors of a node in both implementations.
+The adjacency matrix will be able to check if an edge $(u,v)$ exists in the graph in $O(1)$ time,
+while the adjacency list does the same operation in proportion to the degree $u$ and $v$.
+Thus, the adjacency matrix will be the more suitable representation for this type of graph,
+since it will have faster edge checking.
 
 
 \end{document}
