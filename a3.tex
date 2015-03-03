@@ -1,22 +1,67 @@
 \documentclass{article}
 \author{Bryan Reilly}
 \title{CS320: Assignment 3}
+
+% Do not indent paragraphs
 \setlength\parindent{0pt}
+
+% 1 inch margins
 \usepackage{fullpage}
+
+% For source code
+\usepackage{minted}
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
 
 \begin{document}
 \maketitle{}
+
 \subsection*{Problem 1}
-Stuck trying to get cyclic graphs to work.
+My solution finds the transitive closure of any graph represented by an adjacency matrix.
+I iterate through each node $u$,
+find what nodes are reachable from $u$ using depth first search,
+then use that information to build a transitive closure.
+
+This is the Python code:
+
+\inputminted{python}{q1.py}
+
+The running time of this code is $O( |N| * (|E|+|N|) )$. We come to this via the following argument.
+
+The outer loop of the $transitiveClosure$ function will run $|N|$ times.
+Within that loop we call $DFS$, which is $O(|E|)$, on the current node.
+In the same loop we then update the adjacency graph, which happens in $O(|N|)$ time.
+Thus the inside of our loop runs in $O(|E| + |N|)$ time, and the outer loop runs $O(|N|)$ times.
+This gives us a final bound of $O( |N| * (|E|+|N|) )$.
+
+
 \subsection*{Problem 2}
 Since each node has a degree of at least 2, there are no leaf nodes.
 This means that it will be possible to find a cycle without the need to backtrack.
 By simply using a depth-first search and checking for run-overs we can find a cycle in $O(|V|)$ time.
-\\
 
 Here is the algorithm:
+
+\inputminted{python}{q2.py}
+
+EXPLAIN WHY NOT O|N| time!!!!! Each edge ``removes'' a node
+
 \subsection*{Problem 3}
+We may show a strongly connected graph also contains any two nodes $(u,v)$ in a cycle
+via the following argument.
+Assume G is strongly connected, then there exists a directed path from $u$ to $v$,
+and there exists a directed path from $v$ to $u$.
+A cycle is defined a a subset of the edge set of G that forms a path such that the first node of the path corresponds to the last.
+Thus, we may take our path from $u$ to $v$ as the first part of our cycle, and the path from $v$ to $u$ as the second part of our cycle.
+We know both of these paths exist because the graph is strongly connected.
+Since we start at $u$ and go through $v$, then come back to $u$, we have a cycle that contains $u$ and $v$.
+Thus, if a graph is strongly connected, any two nodes are contained in a cycle.
 
 \subsection*{Problem 4}
+
 
 \end{document}
